@@ -9,8 +9,9 @@ import java.util.Date;
 public class House {
     private long houseId;
     private int amount;
+    private String type;
     private String content;
     private String category;
-    private Date expenceDate;
+    private Date transDate;
     private LocalDateTime createdAt;
 }
