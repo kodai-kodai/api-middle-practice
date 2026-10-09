@@ -32,4 +32,23 @@ public class HouseController {
         return ResponseEntity.created(location).body(createdHouse);
     }
 
+    @GetMapping("/{houseId}")
+    public ResponseEntity<House> selectHouseById(@PathVariable long houseId){
+        House house = houseService.selectHouseById(houseId);
+        return ResponseEntity.ok(house);
+    }
+
+    @DeleteMapping("/{houseId}")
+    public ResponseEntity<Void> deleteHouseById(@PathVariable long houseId){
+        houseService.deleteHouseById(houseId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{houseId}")
+    public ResponseEntity<House> update(@PathVariable long houseId,
+                                       @RequestBody House house ){
+        houseService.updateHouse(house, houseId);
+        return ResponseEntity.ok(house);
+    }
+
 }
