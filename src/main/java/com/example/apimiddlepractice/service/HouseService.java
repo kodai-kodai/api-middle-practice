@@ -27,10 +27,6 @@ public class HouseService {
             throw new HouseArgumentNotValidException("Type is empty");
         }
 
-        if(house.getContent() == null || house.getContent().isEmpty()){
-            throw new HouseArgumentNotValidException("Content is empty");
-        }
-
         houseRepository.insertHouse(house);
         return house;
     }
@@ -57,10 +53,6 @@ public class HouseService {
             throw new HouseArgumentNotValidException("Amount is empty");
         }
 
-        // content が空の場合のバリデーション
-        if(house.getContent() == null || house.getContent().isEmpty()){
-            throw new HouseArgumentNotValidException("Content is empty");
-        }
         if(house.getType() == null || house.getType().isEmpty()){
             throw new HouseArgumentNotValidException("Type is empty");
         }
