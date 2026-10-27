@@ -1,12 +1,20 @@
 package com.example.apimiddlepractice.mapper;
 
 import com.example.apimiddlepractice.dto.House;
+import com.example.apimiddlepractice.dto.CategorySummary;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
+import java.time.LocalDate;
 
 @Mapper
 public interface HouseMapper {
+
+    @Select("SELECT type, category, SUM(amount) AS total_amount FROM house_books " +
+            "WHERE trans_date >= #{startDate} AND trans_date < #{endDate} " +
+            "GROUP BY type, category ORDER BY type, category")
+    List<CategorySummary> selectCategorySummary(@Param("startDate") LocalDate startDate,
+                                                @Param("endDate") LocalDate endDate);
 
     @Select("SELECT * FROM house_books ORDER BY trans_date DESC")
     List<House> selectAllHouse();

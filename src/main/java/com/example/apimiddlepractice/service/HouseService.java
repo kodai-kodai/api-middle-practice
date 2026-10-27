@@ -1,18 +1,51 @@
 package com.example.apimiddlepractice.service;
 
 import com.example.apimiddlepractice.dto.House;
+import com.example.apimiddlepractice.dto.CategorySummary;
+import com.example.apimiddlepractice.dto.MonthlySummary;
 import com.example.apimiddlepractice.exception.HouseArgumentNotValidException;
 import com.example.apimiddlepractice.exception.HouseNotFoundException;
 import com.example.apimiddlepractice.repository.HouseRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.time.YearMonth;
+import java.time.format.DateTimeParseException;
 
 @Service
 public class HouseService {
     private final HouseRepository houseRepository;
     public HouseService(HouseRepository houseRepository) {
         this.houseRepository = houseRepository;
+    }
+
+    public MonthlySummary selectMonthlySummary(String month) {
+        List<CategorySummary> categories = selectCategorySummary(month);
+        long income = categories.stream()
+                .filter(category -> "収入".equals(category.getType()))
+                .mapToLong(CategorySummary::getTotalAmount).sum();
+        long expense = categories.stream()
+                .filter(category -> "支出".equals(category.getType()))
+                .mapToLong(CategorySummary::getTotalAmount).sum();
+        return new MonthlySummary(month, income, expense, income - expense);
+    }
+
+    public List<CategorySummary> selectCategorySummary(String month) {
+        YearMonth targetMonth = parseMonth(month);
+        return houseRepository.selectCategorySummary(
+                targetMonth.atDay(1), targetMonth.plusMonths(1).atDay(1));
+    }
+
+    private YearMonth parseMonth(String month) {
+        if (month == null || !month.matches("[0-9]{4}-(0[1-9]|1[0-2])")
+                || month.startsWith("0000")) {
+            throw new HouseArgumentNotValidException("month must be in yyyy-MM format (year: 0001-9999)");
+        }
+        try {
+            return YearMonth.parse(month);
+        } catch (DateTimeParseException e) {
+            throw new HouseArgumentNotValidException("month must be a valid month in yyyy-MM format");
+        }
     }
 
     public List<House> selectAllHouse() {

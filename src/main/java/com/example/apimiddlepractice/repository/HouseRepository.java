@@ -1,11 +1,13 @@
 package com.example.apimiddlepractice.repository;
 
 import com.example.apimiddlepractice.dto.House;
+import com.example.apimiddlepractice.dto.CategorySummary;
 import com.example.apimiddlepractice.exception.HouseNotFoundException;
 import com.example.apimiddlepractice.mapper.HouseMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.time.LocalDate;
 
 @Repository
 public class HouseRepository {
@@ -38,5 +40,7 @@ public class HouseRepository {
         return house;
     }
 
-
+    public List<CategorySummary> selectCategorySummary(LocalDate startDate, LocalDate endDate) {
+        return houseMapper.selectCategorySummary(startDate, endDate);
+    }
 }

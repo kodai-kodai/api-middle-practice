@@ -1,6 +1,8 @@
 package com.example.apimiddlepractice.controller;
 
 import com.example.apimiddlepractice.dto.House;
+import com.example.apimiddlepractice.dto.CategorySummary;
+import com.example.apimiddlepractice.dto.MonthlySummary;
 import com.example.apimiddlepractice.service.HouseService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +51,16 @@ public class HouseController {
                                        @RequestBody House house ){
         houseService.updateHouse(house, houseId);
         return ResponseEntity.ok(house);
+    }
+
+    @GetMapping("/summary/monthly")
+    public ResponseEntity<MonthlySummary> selectMonthlySummary(@RequestParam String month) {
+        return ResponseEntity.ok(houseService.selectMonthlySummary(month));
+    }
+
+    @GetMapping("/summary/categories")
+    public ResponseEntity<List<CategorySummary>> selectCategorySummary(@RequestParam String month) {
+        return ResponseEntity.ok(houseService.selectCategorySummary(month));
     }
 
 }
